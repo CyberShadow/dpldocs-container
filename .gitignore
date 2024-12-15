@@ -1,0 +1,3 @@
+# Data directories to be mounted in the container (see ./run.sh)
+/dpldocs
+/dpldocs-db

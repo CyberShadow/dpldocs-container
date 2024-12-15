@@ -1,0 +1,36 @@
+From 5e11ec7ca7a1c14a6bbb89682a6e38816e126c67 Mon Sep 17 00:00:00 2001
+From: Vladimir Panteleev <git@cy.md>
+Date: Sun, 15 Dec 2024 14:36:58 +0000
+Subject: [PATCH 2/2] dl: Un-hardcode the database username
+
+Allow running as non-root for fewer security risks.
+---
+ dl.d | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/dl.d b/dl.d
+index f9e11c6..9099f8b 100644
+--- a/dl.d
++++ b/dl.d
+@@ -485,7 +485,8 @@ string getSourceDir(string adrdox_config) {
+ 
+ void rebuild(void delegate(string s) update, string project, string versionTag) {
+ 
+-	auto db = new PostgreSql("dbname=adrdox user=root");
++	auto dbString = environment.get("DPLDOCS_DB", "dbname=adrdox user=root");
++	auto db = new PostgreSql(dbString);
+ 
+ 	// build the project
+ 	std.file.mkdirRecurse(buildMetaFilePath(project, versionTag, ""));
+@@ -685,7 +686,7 @@ void rebuild(void delegate(string s) update, string project, string versionTag)
+ 		"--package-path", "std.*=//phobos.dpldocs.info/",
+ 		"--package-path", "arsd.*=//arsd-official.dpldocs.info/",
+ 
+-		"--postgresConnectionString", "dbname=adrdox user=root",
++		"--postgresConnectionString", dbString,
+ 		"--postgresVersionId", to!string(pvid),
+ 
+ 		"--document-undocumented=" ~ documentUndocumented,
+-- 
+2.46.0
+

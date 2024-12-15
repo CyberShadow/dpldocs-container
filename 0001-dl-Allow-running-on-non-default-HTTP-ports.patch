@@ -1,0 +1,28 @@
+From c6b4a8e2fc5d1641292c799db09133f570ba3131 Mon Sep 17 00:00:00 2001
+From: Vladimir Panteleev <git@cy.md>
+Date: Sun, 15 Dec 2024 14:02:25 +0000
+Subject: [PATCH 1/2] dl: Allow running on non-default HTTP ports
+
+---
+ dl.d | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/dl.d b/dl.d
+index 7cf6ad5..f9e11c6 100644
+--- a/dl.d
++++ b/dl.d
+@@ -132,7 +132,10 @@ class RepoException : Exception {
+ }
+ 
+ void app(Cgi cgi) {
+-	immutable project = cgi.host.replace(".dpldocs.info", "").replace("druntime", "dmd");
++	immutable project = cgi.host
++		.split(":")[0]
++		.replace(".dpldocs.info", "")
++		.replace("druntime", "dmd");
+ 	import std.algorithm;
+ 	if(project == "www") {
+ 		cgi.setResponseLocation("https://dpldocs.info/" ~ cgi.pathInfo);
+-- 
+2.46.0
+
