@@ -73,6 +73,7 @@ let
       pkgs.postgresql
     ];
     buildPhase = ''
+      find . -type f -print0 | xargs -0 sed -i s/dpldocs.info/dpldocs.dlang.org/g
       ${pkgs.dmd}/bin/dmd \
         ${pkgs.lib.optionalString (!production) "-g -debug"} \
         -i -mv=arsd=${arsd} -version=scgi dl.d
