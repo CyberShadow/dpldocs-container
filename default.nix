@@ -1,4 +1,5 @@
 { production ? true
+, uid ? 1000
 }:
 let
   nixpkgs = fetchTarball {
@@ -145,20 +146,20 @@ let
 
       # Create PostgreSQL UNIX socket directory
       mkdir -p run/postgresql
-      chown 1000:1000 run/postgresql
+      chown ${toString uid}:${toString uid} run/postgresql
 
       # Create dpldocs working directories
       mkdir dpldocs dpldocs-db
-      chown 1000:1000 dpldocs dpldocs-db
+      chown ${toString uid}:${toString uid} dpldocs dpldocs-db
 
       # Prepare dpldocs build directory
       cp -a ${dpldocsBuildCopy} dpldocs-build
       chmod -R u+rwX dpldocs-build
-      chown -R 1000:1000 dpldocs-build
+      chown -R ${toString uid}:${toString uid} dpldocs-build
       ln -s ${adrdox}/bin/doc2 dpldocs-build/doc2
     '';
     config = {
-      User = "1000";
+      User = toString uid;
       Cmd = [ containerScript ];
       Env = [
         # Allow dpldocs to call the code.dlang.org API and download package archives over HTTPS

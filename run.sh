@@ -2,8 +2,12 @@
 set -eEuo pipefail
 
 # This will build everything and load a container called "dpldocs" into podman
-"$(nix-build --no-out-link --arg production false -A containerImage)" |
-	podman load
+"$(nix-build \
+    --no-out-link \
+    --arg production false \
+    --arg uid "$(id -u)" \
+    -A containerImage
+)" | podman load
 
 # For illustration. "--userns keep-id" assumes that your UID is 1000.
 mkdir -p dpldocs dpldocs-db
