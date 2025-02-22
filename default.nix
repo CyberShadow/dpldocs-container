@@ -145,6 +145,10 @@ let
       # Create /tmp for nginx
       mkdir -m1777 tmp
 
+      # Create /etc/passwd entry (needed for initdb)
+      mkdir etc
+      echo "dpldocs:x:${toString uid}:${toString uid}:dpldocs:/:/bin/sh" > etc/passwd
+
       # Create PostgreSQL UNIX socket directory
       mkdir -p run/postgresql
       chown ${toString uid}:${toString uid} run/postgresql
